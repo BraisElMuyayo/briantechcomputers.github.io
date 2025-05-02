@@ -4,27 +4,36 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Brian Technology Computers</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
-      font-family: sans-serif;
-      background-color: #fff;
+      font-family: 'Roboto', sans-serif;
+      background-color: #f8f8f8;
       color: #333;
     }
     header {
       background-color: #731010;
       color: white;
-      padding: 1rem;
       display: flex;
       align-items: center;
+      padding: 1rem 2rem;
     }
     header img {
       height: 60px;
       margin-right: 1rem;
     }
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
     nav {
-      text-align: center;
-      padding: 1rem;
+      background: #fff;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     nav a {
       margin: 0 1rem;
@@ -34,37 +43,58 @@
     }
     .catalogo {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
       padding: 2rem;
     }
     .servicio {
-      border: 1px solid #ccc;
-      padding: 1rem;
-      border-radius: 8px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      padding: 1.5rem;
+      transition: transform 0.3s ease;
+    }
+    .servicio:hover {
+      transform: translateY(-5px);
     }
     .servicio h3 {
       color: #731010;
+      margin-top: 0;
     }
     .btn {
       background-color: #731010;
       color: white;
-      padding: 0.5rem 1rem;
+      padding: 0.6rem 1rem;
       border: none;
-      border-radius: 4px;
+      border-radius: 5px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
-    .carrito, .formulario, .login {
+    .btn:hover {
+      background-color: #500a0a;
+    }
+    section {
       padding: 2rem;
     }
     .hidden {
       display: none;
     }
+    input, textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.3rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    h2 {
+      color: #731010;
+    }
   </style>
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Logo" />
+    <img src="logo.png" alt="Logo">
     <div>
       <h1>Brian Technology Computers</h1>
       <p>Ciberseguridad y Sistemas</p>
@@ -80,32 +110,32 @@
 
   <section id="catalogo" class="catalogo"></section>
 
-  <section id="carrito" class="carrito">
+  <section id="carrito">
     <h2>Carrito de servicios</h2>
     <ul id="listaCarrito"></ul>
   </section>
 
-  <section id="contacto" class="formulario">
+  <section id="contacto">
     <h2>Formulario de contacto</h2>
     <form>
-      <label>Nombre:<br><input type="text" required></label><br><br>
-      <label>Email:<br><input type="email" required></label><br><br>
-      <label>Mensaje:<br><textarea rows="4" cols="50" required></textarea></label><br><br>
+      <label>Nombre:<input type="text" required></label>
+      <label>Email:<input type="email" required></label>
+      <label>Mensaje:<textarea rows="4" required></textarea></label>
       <button class="btn">Enviar solicitud</button>
     </form>
   </section>
 
-  <section id="login" class="login">
+  <section id="login">
     <h2>Iniciar Sesión</h2>
-    <label>Usuario: <input id="user" type="text" /></label><br><br>
-    <label>Contraseña: <input id="pass" type="password" /></label><br><br>
+    <label>Usuario: <input id="user" type="text" /></label>
+    <label>Contraseña: <input id="pass" type="password" /></label>
     <button class="btn" onclick="login()">Entrar</button>
   </section>
 
-  <section id="adminPanel" class="formulario hidden">
+  <section id="adminPanel" class="hidden">
     <h2>Panel de Administración</h2>
-    <label>Nombre del nuevo servicio:<br><input id="nuevoNombre" type="text" /></label><br><br>
-    <label>Descripción:<br><input id="nuevaDesc" type="text" /></label><br><br>
+    <label>Nombre del nuevo servicio:<input id="nuevoNombre" type="text" /></label>
+    <label>Descripción:<input id="nuevaDesc" type="text" /></label>
     <button class="btn" onclick="agregarServicio()">Agregar Servicio</button>
   </section>
 
