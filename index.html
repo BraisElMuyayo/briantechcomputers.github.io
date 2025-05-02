@@ -121,7 +121,8 @@
 <form id="contact-form">
   <label>Nombre:<br><input type="text" id="nombre" required></label><br><br>
   <label>Email:<br><input type="email" id="email" required></label><br><br>
-  <label>Mensaje:<br><textarea id="mensaje" rows="4" cols="50" required></textarea></label><br><br>
+  <label>Mensaje adicional:<br><textarea id="mensaje" rows="4" cols="50"></textarea></label><br><br>
+  <input type="hidden" id="serviciosSeleccionados" name="servicios">
   <button class="btn" type="submit">Enviar solicitud</button>
   <p id="respuesta" style="margin-top: 1rem;"></p>
 </form>
@@ -202,6 +203,9 @@ document.getElementById("contact-form").addEventListener("submit", function(e) {
   const mensaje = document.getElementById("mensaje").value;
   const respuesta = document.getElementById("respuesta");
 
+  const carritoItems = Array.from(document.getElementById("listaCarrito").children).map(li => li.textContent);
+  const servicios = carritoItems.join(", ");
+
   fetch("https://formspree.io/f/xldbjjrq", {
     method: "POST",
     headers: {
@@ -210,7 +214,8 @@ document.getElementById("contact-form").addEventListener("submit", function(e) {
     body: JSON.stringify({
       nombre,
       email,
-      mensaje
+      mensaje,
+      servicios
     })
   }).then(response => {
     if (response.ok) {
