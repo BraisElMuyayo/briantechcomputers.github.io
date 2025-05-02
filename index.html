@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,13 +7,10 @@
   <title>Brian Technology Computers</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-    }
     body {
       margin: 0;
       font-family: 'Roboto', sans-serif;
-      background-color: #f8f8f8;
+      background-color: #f9f9f9;
       color: #333;
     }
     header {
@@ -23,12 +21,12 @@
       padding: 1rem 2rem;
     }
     header img {
-      height: 60px;
-      margin-right: 1rem;
+      height: 90px;
+      margin-right: 1.5rem;
     }
     header h1 {
       margin: 0;
-      font-size: 1.8rem;
+      font-size: 2rem;
     }
     nav {
       background: #fff;
@@ -52,14 +50,15 @@
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.05);
       padding: 1.5rem;
-      transition: transform 0.3s ease;
-    }
-    .servicio:hover {
-      transform: translateY(-5px);
     }
     .servicio h3 {
-      color: #731010;
       margin-top: 0;
+      color: #731010;
+    }
+    .precio {
+      font-weight: bold;
+      color: #555;
+      margin: 0.5rem 0;
     }
     .btn {
       background-color: #731010;
@@ -68,16 +67,9 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
     }
     .btn:hover {
       background-color: #500a0a;
-    }
-    section {
-      padding: 2rem;
-    }
-    .hidden {
-      display: none;
     }
     input, textarea {
       width: 100%;
@@ -86,6 +78,13 @@
       margin-bottom: 1rem;
       border: 1px solid #ccc;
       border-radius: 4px;
+    }
+    .admin-panel {
+      padding: 2rem;
+      background: #fff4f4;
+    }
+    .hidden {
+      display: none;
     }
     h2 {
       color: #731010;
@@ -104,66 +103,110 @@
   <nav>
     <a href="#catalogo">Catálogo</a>
     <a href="#carrito">Carrito</a>
-    <a href="#contacto">Contacto</a>
     <a href="#login">Login</a>
   </nav>
 
   <section id="catalogo" class="catalogo"></section>
 
-  <section id="carrito">
+  <section id="carrito" style="padding:2rem;">
     <h2>Carrito de servicios</h2>
     <ul id="listaCarrito"></ul>
   </section>
 
-  <section id="contacto">
-    <h2>Formulario de contacto</h2>
-    
-<form id="contact-form">
-  <label>Nombre:<br><input type="text" id="nombre" required></label><br><br>
-  <label>Email:<br><input type="email" id="email" required></label><br><br>
-  <label>Mensaje adicional:<br><textarea id="mensaje" rows="4" cols="50"></textarea></label><br><br>
-  <input type="hidden" id="serviciosSeleccionados" name="servicios">
-  <button class="btn" type="submit">Enviar solicitud</button>
-  <p id="respuesta" style="margin-top: 1rem;"></p>
-</form>
-
-      <label>Nombre:<input type="text" required></label>
-      <label>Email:<input type="email" required></label>
-      <label>Mensaje:<textarea rows="4" required></textarea></label>
-      <button class="btn">Enviar solicitud</button>
-    </form>
+  <section id="login" style="padding:2rem;">
+    <h2>Iniciar Sesión (Administrador)</h2>
+    <input type="text" id="adminUser" placeholder="Usuario">
+    <input type="password" id="adminPass" placeholder="Contraseña">
+    <button class="btn" onclick="loginAdmin()">Entrar</button>
   </section>
 
-  <section id="login">
-    <h2>Iniciar Sesión</h2>
-    <label>Usuario: <input id="user" type="text" /></label>
-    <label>Contraseña: <input id="pass" type="password" /></label>
-    <button class="btn" onclick="login()">Entrar</button>
-  </section>
-
-  <section id="adminPanel" class="hidden">
+  <section id="adminPanel" class="admin-panel hidden">
     <h2>Panel de Administración</h2>
-    <label>Nombre del nuevo servicio:<input id="nuevoNombre" type="text" /></label>
-    <label>Descripción:<input id="nuevaDesc" type="text" /></label>
-    <button class="btn" onclick="agregarServicio()">Agregar Servicio</button>
+    <label>Nombre del servicio:<input id="nuevoNombre"></label>
+    <label>Descripción:<input id="nuevaDesc"></label>
+    <label>Precio:<input id="nuevoPrecio" type="number"></label>
+    <button class="btn" onclick="agregarServicio()">Agregar servicio</button>
+  
+  </section>
+
+  <section id="adminManagePanel" class="admin-panel hidden">
+    <h2>Gestionar Servicios Existentes</h2>
+    <ul id="listaServiciosAdmin"></ul>
   </section>
 
   <script>
-    const servicios = [
-      { nombre: "Instalación de Sistemas Operativos", descripcion: "Formateo e instalación completa." },
-      { nombre: "Seguridad Informática", descripcion: "Antivirus, firewall, y configuración segura." },
-      { nombre: "Mantenimiento Preventivo", descripcion: "Limpieza, optimización y actualizaciones." }
+    function renderAdminList() {
+      const lista = document.getElementById("listaServiciosAdmin");
+      if (!lista) return;
+      lista.innerHTML = "";
+      servicios.forEach((serv, index) => {
+        const item = document.createElement("li");
+        item.innerHTML = `
+          <strong>${serv.nombre}</strong> - ${serv.descripcion} - <em>${serv.precio}</em>
+          <button onclick="editarServicio(${index})">Editar</button>
+          <button onclick="eliminarServicio(${index})">Eliminar</button>
+        `;
+        lista.appendChild(item);
+      });
+    }
+
+    function editarServicio(i) {
+      const serv = servicios[i];
+      const nuevoNombre = prompt("Nuevo nombre:", serv.nombre);
+      const nuevaDesc = prompt("Nueva descripción:", serv.descripcion);
+      const nuevoPrecio = prompt("Nuevo precio:", serv.precio.replace('€',''));
+      if (nuevoNombre && nuevaDesc && nuevoPrecio) {
+        servicios[i] = {
+          nombre: nuevoNombre,
+          descripcion: nuevaDesc,
+          precio: nuevoPrecio + "€"
+        };
+        renderCatalogo();
+        renderAdminList();
+      }
+    }
+
+    function eliminarServicio(i) {
+      if (confirm("¿Estás seguro de eliminar este servicio?")) {
+        servicios.splice(i, 1);
+        renderCatalogo();
+        renderAdminList();
+      }
+    }
+
+    // Mostrar panel extendido solo si el admin accede
+    const originalLogin = loginAdmin.toString();
+    loginAdmin = function() {
+      const u = document.getElementById("adminUser").value;
+      const p = document.getElementById("adminPass").value;
+      if (u === "admin" && btoa(p) === "YWRtaW4xMjM=") {
+        document.getElementById("adminPanel").classList.remove("hidden");
+        document.getElementById("adminManagePanel").classList.remove("hidden");
+        renderAdminList();
+        alert("Bienvenido administrador.");
+      } else {
+        alert("Acceso denegado.");
+      }
+    };
+
+    let servicios = [
+      {{ nombre: "Instalación de Sistemas Operativos", descripcion: "Formateo e instalación completa.", precio: "30€" }},
+      {{ nombre: "Seguridad Informática", descripcion: "Antivirus, firewall y configuración segura.", precio: "40€" }},
+      {{ nombre: "Mantenimiento Preventivo", descripcion: "Limpieza, optimización y actualizaciones.", precio: "25€" }}
     ];
 
     const catalogo = document.getElementById("catalogo");
     const carrito = document.getElementById("listaCarrito");
 
-    function renderServicios() {
+    function renderCatalogo() {
       catalogo.innerHTML = "";
       servicios.forEach(serv => {
         const div = document.createElement("div");
         div.className = "servicio";
-        div.innerHTML = `<h3>${serv.nombre}</h3><p>${serv.descripcion}</p><button class='btn' onclick='agregarAlCarrito("${serv.nombre}")'>Agregar al carrito</button>`;
+        div.innerHTML = `<h3>${serv.nombre}</h3>
+                         <p>${serv.descripcion}</p>
+                         <p class="precio">Precio: ${serv.precio}</p>
+                         <button class="btn" onclick="agregarAlCarrito('${serv.nombre}')">Agregar al carrito</button>`;
         catalogo.appendChild(div);
       });
     }
@@ -174,62 +217,27 @@
       carrito.appendChild(li);
     }
 
-    function login() {
-      const u = document.getElementById("user").value;
-      const p = document.getElementById("pass").value;
-      if (u === "admin" && p === "admin123") {
+    function loginAdmin() {
+      const u = document.getElementById("adminUser").value;
+      const p = document.getElementById("adminPass").value;
+      if (u === "admin" && btoa(p) === "YWRtaW4xMjM=") {
         document.getElementById("adminPanel").classList.remove("hidden");
-        alert("Bienvenido, administrador.");
+        alert("Bienvenido administrador.");
       } else {
-        alert("Login fallido.");
+        alert("Acceso denegado.");
       }
     }
 
     function agregarServicio() {
       const nombre = document.getElementById("nuevoNombre").value;
-      const desc = document.getElementById("nuevaDesc").value;
-      servicios.push({ nombre, descripcion: desc });
-      renderServicios();
-      alert("Servicio agregado.");
+      const descripcion = document.getElementById("nuevaDesc").value;
+      const precio = document.getElementById("nuevoPrecio").value + "€";
+      servicios.push({ nombre, descripcion, precio });
+      renderCatalogo();
+      alert("Servicio añadido.");
     }
 
-    renderServicios();
+    renderCatalogo();
   </script>
-<script>
-document.getElementById("contact-form").addEventListener("submit", function(e) {
-  e.preventDefault();
-  const nombre = document.getElementById("nombre").value;
-  const email = document.getElementById("email").value;
-  const mensaje = document.getElementById("mensaje").value;
-  const respuesta = document.getElementById("respuesta");
-
-  const carritoItems = Array.from(document.getElementById("listaCarrito").children).map(li => li.textContent);
-  const servicios = carritoItems.join(", ");
-
-  fetch("https://formspree.io/f/xldbjjrq", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      nombre,
-      email,
-      mensaje,
-      servicios
-    })
-  }).then(response => {
-    if (response.ok) {
-      respuesta.style.color = "green";
-      respuesta.textContent = "Mensaje enviado correctamente.";
-    } else {
-      respuesta.style.color = "red";
-      respuesta.textContent = "Hubo un problema al enviar. Intenta de nuevo.";
-    }
-  }).catch(error => {
-    respuesta.style.color = "red";
-    respuesta.textContent = "Error de conexión.";
-  });
-});
-</script>
 </body>
 </html>
