@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brian Technology Computers</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: #fff;
+      color: #333;
+    }
+    header {
+      background-color: #731010;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    nav {
+      text-align: center;
+      padding: 1rem;
+    }
+    nav a {
+      margin: 0 1rem;
+      text-decoration: none;
+      color: #731010;
+      font-weight: bold;
+    }
+    .catalogo {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      padding: 2rem;
+    }
+    .servicio {
+      border: 1px solid #ccc;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+    .servicio h3 {
+      color: #731010;
+    }
+    .btn {
+      background-color: #731010;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .carrito, .formulario {
+      padding: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Brian Technology Computers</h1>
+    <p>Ciberseguridad y Sistemas</p>
+  </header>
+
+  <nav>
+    <a href="#catalogo">Catálogo</a>
+    <a href="#carrito">Carrito</a>
+    <a href="#contacto">Contacto</a>
+  </nav>
+
+  <section id="catalogo" class="catalogo">
+    <div class="servicio">
+      <h3>Instalación de Sistemas Operativos</h3>
+      <p>Servicio completo de formateo e instalación.</p>
+      <button class="btn" onclick="agregar('Instalación de Sistemas Operativos')">Agregar al carrito</button>
+    </div>
+    <div class="servicio">
+      <h3>Seguridad Informática</h3>
+      <p>Protección contra virus, malware y configuración de firewalls.</p>
+      <button class="btn" onclick="agregar('Seguridad Informática')">Agregar al carrito</button>
+    </div>
+    <div class="servicio">
+      <h3>Mantenimiento Preventivo</h3>
+      <p>Limpieza interna, optimización y actualizaciones.</p>
+      <button class="btn" onclick="agregar('Mantenimiento Preventivo')">Agregar al carrito</button>
+    </div>
+  </section>
+
+  <section id="carrito" class="carrito">
+    <h2>Carrito de servicios</h2>
+    <ul id="listaCarrito"></ul>
+  </section>
+
+  <section id="contacto" class="formulario">
+    <h2>Formulario de contacto</h2>
+    <form>
+      <label>Nombre:<br><input type="text" required></label><br><br>
+      <label>Email:<br><input type="email" required></label><br><br>
+      <label>Mensaje:<br><textarea rows="4" cols="50" required></textarea></label><br><br>
+      <button class="btn">Enviar solicitud</button>
+    </form>
+  </section>
+
+  <script>
+    const lista = document.getElementById("listaCarrito");
+    function agregar(servicio) {
+      const item = document.createElement("li");
+      item.textContent = servicio;
+      lista.appendChild(item);
+    }
+  </script>
+</body>
+</html>
