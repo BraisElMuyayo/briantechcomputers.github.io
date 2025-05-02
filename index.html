@@ -2,119 +2,98 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Brian Technology Computers</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Roboto', sans-serif; margin: 0; background: #f8f8f8; color: #333; }
+    body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 0; }
     header { background: #731010; color: white; padding: 1rem 2rem; display: flex; align-items: center; }
-    header img { height: 100px; margin-right: 1rem; }
-    nav { background: #fff; text-align: center; padding: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    nav a { margin: 0 15px; text-decoration: none; color: #731010; font-weight: bold; }
-    section { padding: 2rem; }
-    .catalogo { margin-top: 1rem; }
-    .catalogo h3 { color: #731010; }
-    .servicio { background: white; padding: 1rem; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 1rem; }
-    .precio { font-weight: bold; }
-    .btn { margin-top: 0.5rem; background: #731010; color: white; padding: 0.4rem 1rem; border: none; border-radius: 5px; cursor: pointer; }
-    input, textarea { width: 100%; padding: 0.5rem; margin: 0.3rem 0; border: 1px solid #ccc; border-radius: 5px; }
-    iframe { display: none; width: 100%; max-width: 800px; height: 900px; border: none; margin: 2rem auto; display: block; }
-    .admin-panel { background: #fff4f4; margin-top: 2rem; }
-    .hidden { display: none; }
+    header h1 { margin: 0; font-size: 1.5rem; }
+    header img { height: 70px; margin-right: 1rem; }
+    .btn { background: #731010; color: white; border: none; padding: 0.5rem 1rem; margin: 0.2rem; border-radius: 6px; cursor: pointer; }
+    .catalogo, .admin-panel { padding: 1rem; }
+    .servicio { background: white; padding: 1rem; margin: 1rem 0; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    #carrito, #formulario, #adminPanel { margin: 2rem; }
+    input { padding: 0.5rem; width: 100%; margin-bottom: 0.5rem; }
+    iframe { width: 100%; height: 600px; border: none; margin-top: 1rem; }
   </style>
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Logo">
-    <div>
-      <h1>Brian Technology Computers</h1>
-      <p>Ciberseguridad y Sistemas</p>
-    </div>
+    <img src="logo.png" alt="Logo" />
+    <h1>Brian Technology Computers</h1>
   </header>
 
-  <nav>
-    <a href="#catalogo">Catálogo</a>
-    <a href="#carrito">Carrito</a>
-    <a href="#admin">Admin</a>
-  </nav>
-
-  
-<section id="catalogo">
-  <div id="filtrosCategorias" style="margin-bottom: 1rem;"></div>
-</section>
+  <section>
+    <div id="filtrosCategorias"></div>
+    <div id="catalogo"></div>
+  </section>
 
   <section id="carrito">
-    <h2>Carrito</h2>
+    <h2>Carrito de servicios</h2>
     <ul id="listaCarrito"></ul>
   </section>
 
-  <section id="formulario">
-    <h2>Formulario</h2>
-    <p><strong>Servicios seleccionados:</strong></p>
+  <section id="formulario" style="display:none;">
+    <h2>Formulario de contacto</h2>
     <ul id="resumenServicios"></ul>
     <button class="btn" onclick="copiarResumen()">Copiar servicios</button>
-    <iframe id="formFrame" src="https://docs.google.com/forms/d/e/1FAIpQLSfMwYVpVz07Fr4CKfXrp6AlZAjbOy6F_jpsINSuoAVolzA2rw/viewform?embedded=true"></iframe>
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfMwYVpVz07Fr4CKfXrp6AlZAjbOy6F_jpsINSuoAVolzA2rw/viewform?embedded=true"></iframe>
   </section>
 
-  <section id="admin" class="admin-panel">
-    <h2>Administrador</h2>
-    <input type="text" id="adminUser" placeholder="Usuario" />
-    <input type="password" id="adminPass" placeholder="Contraseña" />
+  <section class="admin-panel">
+    <h2>Acceso administrador</h2>
+    <input id="adminUser" placeholder="Usuario">
+    <input id="adminPass" placeholder="Contraseña" type="password">
     <button class="btn" onclick="loginAdmin()">Entrar</button>
-
-    <div id="adminPanel" class="hidden">
-      <h3>Gestión de catálogos</h3>
-      <input id="nuevoCatalogo" placeholder="Nuevo catálogo" />
+    <div id="adminPanel" style="display:none;">
+      <input id="nuevoCatalogo" placeholder="Nuevo catálogo">
       <button class="btn" onclick="crearCatalogo()">Crear catálogo</button>
-      <div id="catalogoEditor"></div>
+      <div id="panelCatalogos"></div>
     </div>
   </section>
 
   <script>
     let catalogos = {
       "Ciberseguridad": [
-        { nombre: "Instalación Antivirus", descripcion: "Instalamos y configuramos antivirus", precio: "30€" },
-        { nombre: "Firewall Personalizado", descripcion: "Configuramos cortafuegos", precio: "50€" }
+        { nombre: "Instalación Antivirus", descripcion: "Instalación y configuración", precio: "30€" }
       ],
       "Reparación": [
-        { nombre: "Formateo", descripcion: "Formateo completo del equipo", precio: "25€" }
+        { nombre: "Formateo", descripcion: "Formateo completo del sistema", precio: "25€" }
       ]
     };
 
-    
-function generarFiltros() {
-  const contenedor = document.getElementById("filtrosCategorias");
-  contenedor.innerHTML = "";
-  const btnTodos = document.createElement("button");
-  btnTodos.className = "btn";
-  btnTodos.innerText = "Ver todos";
-  btnTodos.onclick = () => renderCatalogo();
-  contenedor.appendChild(btnTodos);
-
-  for (let cat in catalogos) {
-    const btn = document.createElement("button");
-    btn.className = "btn";
-    btn.innerText = cat;
-    btn.onclick = () => renderCatalogo(cat);
-    contenedor.appendChild(btn);
-  }
-}
-
-function renderCatalogo() {
-      const seccion = document.getElementById("catalogo");
-      seccion.innerHTML = "<h2>Catálogo de servicios</h2>";
-      for (let cat in catalogos) {
+    function renderCatalogo(filtro = '') {
+      const contenedor = document.getElementById("catalogo");
+      contenedor.innerHTML = "";
+      const cats = filtro ? { [filtro]: catalogos[filtro] } : catalogos;
+      for (let cat in cats) {
         const div = document.createElement("div");
-        div.className = "catalogo";
         div.innerHTML = `<h3>${cat}</h3>`;
-        catalogos[cat].forEach((s, i) => {
-          const servicio = document.createElement("div");
-          servicio.className = "servicio";
-          servicio.innerHTML = `<strong>${s.nombre}</strong><p>${s.descripcion}</p><p class="precio">Precio: ${s.precio}</p><button class="btn" onclick="agregarAlCarrito('${s.nombre}')">Agregar al carrito</button>`;
-          div.appendChild(servicio);
+        cats[cat].forEach((s) => {
+          const card = document.createElement("div");
+          card.className = "servicio";
+          card.innerHTML = `<strong>${s.nombre}</strong><p>${s.descripcion}</p><p>Precio: ${s.precio}</p><button class="btn" onclick="agregarAlCarrito('${s.nombre}')">Agregar al carrito</button>`;
+          div.appendChild(card);
         });
-        seccion.appendChild(div);
+        contenedor.appendChild(div);
+      }
+    }
+
+    function generarFiltros() {
+      const cont = document.getElementById("filtrosCategorias");
+      cont.innerHTML = "";
+      const btn = document.createElement("button");
+      btn.textContent = "Ver todos";
+      btn.className = "btn";
+      btn.onclick = () => renderCatalogo();
+      cont.appendChild(btn);
+      for (let cat in catalogos) {
+        const b = document.createElement("button");
+        b.textContent = cat;
+        b.className = "btn";
+        b.onclick = () => renderCatalogo(cat);
+        cont.appendChild(b);
       }
     }
 
@@ -125,196 +104,83 @@ function renderCatalogo() {
       const resumen = document.createElement("li");
       resumen.textContent = nombre;
       document.getElementById("resumenServicios").appendChild(resumen);
-      document.getElementById("formFrame").style.display = "block";
+      document.getElementById("formulario").style.display = "block";
     }
 
     function copiarResumen() {
-      const items = Array.from(document.getElementById("resumenServicios").children).map(li => li.textContent).join("\n");
+      const items = Array.from(document.querySelectorAll("#resumenServicios li")).map(li => li.textContent).join("\n");
       navigator.clipboard.writeText(items);
-      alert("Servicios copiados al portapapeles.");
+      alert("Servicios copiados");
     }
 
     function loginAdmin() {
-      const u = document.getElementById("adminUser").value;
-      const p = document.getElementById("adminPass").value;
-      if (u === "admin" && btoa(p) === "YWRtaW4xMjM=") {
-        document.getElementById("adminPanel").classList.remove("hidden");
-        renderAdminEditor();
-
-function guardarEdicionServicio(cat, idx) {
-  const nombre = document.getElementById(`edit-nombre-${cat}-${idx}`).value;
-  const descripcion = document.getElementById(`edit-desc-${cat}-${idx}`).value;
-  const precio = document.getElementById(`edit-precio-${cat}-${idx}`).value + "€";
-  catalogos[cat][idx] = { nombre, descripcion, precio };
-  generarFiltros();
-renderCatalogo();
-  renderAdminEditor();
-}
-
-function borrarServicio(cat, idx) {
-  if (confirm("¿Eliminar este servicio?")) {
-    catalogos[cat].splice(idx, 1);
-    generarFiltros();
-renderCatalogo();
-    renderAdminEditor();
-  }
-}
-
+      if (document.getElementById("adminUser").value === "admin" && document.getElementById("adminPass").value === "admin123") {
+        document.getElementById("adminPanel").style.display = "block";
+        renderPanelAdmin();
       } else {
-        alert("Credenciales incorrectas.");
+        alert("Credenciales incorrectas");
       }
     }
 
     function crearCatalogo() {
-      const nuevo = document.getElementById("nuevoCatalogo").value;
-      if (!nuevo || catalogos[nuevo]) return alert("Nombre inválido o ya existe.");
-      catalogos[nuevo] = [];
+      const nombre = document.getElementById("nuevoCatalogo").value;
+      if (!nombre || catalogos[nombre]) return;
+      catalogos[nombre] = [];
+      renderCatalogo();
       generarFiltros();
-renderCatalogo();
-      renderAdminEditor();
-
-function guardarEdicionServicio(cat, idx) {
-  const nombre = document.getElementById(`edit-nombre-${cat}-${idx}`).value;
-  const descripcion = document.getElementById(`edit-desc-${cat}-${idx}`).value;
-  const precio = document.getElementById(`edit-precio-${cat}-${idx}`).value + "€";
-  catalogos[cat][idx] = { nombre, descripcion, precio };
-  generarFiltros();
-renderCatalogo();
-  renderAdminEditor();
-}
-
-function borrarServicio(cat, idx) {
-  if (confirm("¿Eliminar este servicio?")) {
-    catalogos[cat].splice(idx, 1);
-    generarFiltros();
-renderCatalogo();
-    renderAdminEditor();
-  }
-}
-
+      renderPanelAdmin();
     }
 
-    function renderAdminEditor() {
-      const div = document.getElementById("catalogoEditor");
-      div.innerHTML = "";
+    function agregarServicio(cat) {
+      const n = document.getElementById(`n-${cat}`).value;
+      const d = document.getElementById(`d-${cat}`).value;
+      const p = document.getElementById(`p-${cat}`).value + "€";
+      catalogos[cat].push({ nombre: n, descripcion: d, precio: p });
+      renderCatalogo();
+      renderPanelAdmin();
+    }
+
+    function editarServicio(cat, i) {
+      const n = document.getElementById(`editn-${cat}-${i}`).value;
+      const d = document.getElementById(`editd-${cat}-${i}`).value;
+      const p = document.getElementById(`editp-${cat}-${i}`).value + "€";
+      catalogos[cat][i] = { nombre: n, descripcion: d, precio: p };
+      renderCatalogo();
+      renderPanelAdmin();
+    }
+
+    function eliminarServicio(cat, i) {
+      if (confirm("¿Eliminar este servicio?")) {
+        catalogos[cat].splice(i, 1);
+        renderCatalogo();
+        renderPanelAdmin();
+      }
+    }
+
+    function renderPanelAdmin() {
+      const cont = document.getElementById("panelCatalogos");
+      cont.innerHTML = "";
       for (let cat in catalogos) {
-        const section = document.createElement("div");
-        section.innerHTML = `<h4>${cat} <button onclick="renombrarCatalogo('${cat}')">Renombrar</button> <button onclick="eliminarCatalogo('${cat}')">Eliminar</button></h4>`;
-        section.innerHTML += `
-          <input placeholder='Nombre' id='nombre-${cat}'>
-          <input placeholder='Descripción' id='desc-${cat}'>
-          <input placeholder='Precio' id='precio-${cat}'>
-          <button class='btn' onclick="agregarServicioCatalogo('${cat}')">Agregar</button>
-        `;
-        
-        catalogos[cat].forEach((s, idx) => {
-          const servDiv = document.createElement("div");
-          servDiv.innerHTML = `
-            <input value="${s.nombre}" id="edit-nombre-${cat}-${idx}" placeholder="Nombre">
-            <input value="${s.descripcion}" id="edit-desc-${cat}-${idx}" placeholder="Descripción">
-            <input value="${s.precio.replace('€','')}" id="edit-precio-${cat}-${idx}" placeholder="Precio">
-            <button onclick="guardarEdicionServicio('${cat}', ${idx})">Guardar</button>
-            <button onclick="borrarServicio('${cat}', ${idx})">Eliminar</button>
-          `;
-          section.appendChild(servDiv);
+        const div = document.createElement("div");
+        div.innerHTML = `<h4>${cat}</h4>
+          <input id="n-${cat}" placeholder="Nombre"><input id="d-${cat}" placeholder="Descripción">
+          <input id="p-${cat}" placeholder="Precio"><button class="btn" onclick="agregarServicio('${cat}')">Añadir</button>`;
+        catalogos[cat].forEach((s, i) => {
+          div.innerHTML += `
+            <div>
+              <input id="editn-${cat}-${i}" value="${s.nombre}">
+              <input id="editd-${cat}-${i}" value="${s.descripcion}">
+              <input id="editp-${cat}-${i}" value="${s.precio.replace('€','')}">
+              <button class="btn" onclick="editarServicio('${cat}',${i})">Guardar</button>
+              <button class="btn" onclick="eliminarServicio('${cat}',${i})">Eliminar</button>
+            </div>`;
         });
-
-        div.appendChild(section);
-      }
-    }
-
-    function agregarServicioCatalogo(cat) {
-      const nombre = document.getElementById("nombre-" + cat).value;
-      const descripcion = document.getElementById("desc-" + cat).value;
-      const precio = document.getElementById("precio-" + cat).value + "€";
-      catalogos[cat].push({ nombre, descripcion, precio }); renderServicios();
-      generarFiltros();
-renderCatalogo();
-      renderAdminEditor();
-
-function guardarEdicionServicio(cat, idx) {
-  const nombre = document.getElementById(`edit-nombre-${cat}-${idx}`).value;
-  const descripcion = document.getElementById(`edit-desc-${cat}-${idx}`).value;
-  const precio = document.getElementById(`edit-precio-${cat}-${idx}`).value + "€";
-  catalogos[cat][idx] = { nombre, descripcion, precio };
-  generarFiltros();
-renderCatalogo();
-  renderAdminEditor();
-}
-
-function borrarServicio(cat, idx) {
-  if (confirm("¿Eliminar este servicio?")) {
-    catalogos[cat].splice(idx, 1);
-    generarFiltros();
-renderCatalogo();
-    renderAdminEditor();
-  }
-}
-
-    }
-
-    function renombrarCatalogo(cat) {
-      const nuevoNombre = prompt("Nuevo nombre para el catálogo:", cat);
-      if (nuevoNombre && !catalogos[nuevoNombre]) {
-        catalogos[nuevoNombre] = catalogos[cat];
-        delete catalogos[cat];
-        generarFiltros();
-renderCatalogo();
-        renderAdminEditor();
-
-function guardarEdicionServicio(cat, idx) {
-  const nombre = document.getElementById(`edit-nombre-${cat}-${idx}`).value;
-  const descripcion = document.getElementById(`edit-desc-${cat}-${idx}`).value;
-  const precio = document.getElementById(`edit-precio-${cat}-${idx}`).value + "€";
-  catalogos[cat][idx] = { nombre, descripcion, precio };
-  generarFiltros();
-renderCatalogo();
-  renderAdminEditor();
-}
-
-function borrarServicio(cat, idx) {
-  if (confirm("¿Eliminar este servicio?")) {
-    catalogos[cat].splice(idx, 1);
-    generarFiltros();
-renderCatalogo();
-    renderAdminEditor();
-  }
-}
-
-      }
-    }
-
-    function eliminarCatalogo(cat) {
-      if (confirm("¿Eliminar este catálogo?")) {
-        delete catalogos[cat];
-        generarFiltros();
-renderCatalogo();
-        renderAdminEditor();
-
-function guardarEdicionServicio(cat, idx) {
-  const nombre = document.getElementById(`edit-nombre-${cat}-${idx}`).value;
-  const descripcion = document.getElementById(`edit-desc-${cat}-${idx}`).value;
-  const precio = document.getElementById(`edit-precio-${cat}-${idx}`).value + "€";
-  catalogos[cat][idx] = { nombre, descripcion, precio };
-  generarFiltros();
-renderCatalogo();
-  renderAdminEditor();
-}
-
-function borrarServicio(cat, idx) {
-  if (confirm("¿Eliminar este servicio?")) {
-    catalogos[cat].splice(idx, 1);
-    generarFiltros();
-renderCatalogo();
-    renderAdminEditor();
-  }
-}
-
+        cont.appendChild(div);
       }
     }
 
     generarFiltros();
-renderCatalogo();
+    renderCatalogo();
   </script>
 </body>
 </html>
