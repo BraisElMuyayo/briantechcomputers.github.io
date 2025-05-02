@@ -239,5 +239,33 @@
 
     renderCatalogo();
   </script>
+<script>
+document.getElementById("contact-form").addEventListener("submit", function(e) {
+  e.preventDefault();
+  const nombre = document.getElementById("nombre").value;
+  const email = document.getElementById("email").value;
+  const mensaje = document.getElementById("mensaje").value;
+  const respuesta = document.getElementById("respuesta");
+  const carritoItems = Array.from(document.getElementById("listaCarrito").children).map(li => li.textContent);
+  const servicios = carritoItems.join(", ");
+
+  fetch("https://formspree.io/f/xldbjjrq", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nombre, email, mensaje, servicios })
+  }).then(response => {
+    if (response.ok) {
+      respuesta.style.color = "green";
+      respuesta.textContent = "Mensaje enviado correctamente.";
+    } else {
+      respuesta.style.color = "red";
+      respuesta.textContent = "Error al enviar. Intenta de nuevo.";
+    }
+  }).catch(() => {
+    respuesta.style.color = "red";
+    respuesta.textContent = "Error de conexión.";
+  });
+});
+</script>
 </body>
 </html>
