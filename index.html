@@ -117,7 +117,7 @@
 
   <section id="contacto">
     <h2>Formulario de contacto</h2>
-    <form>
+    <form action="https://formspree.io/f/xldbjjrq" method="POST">
       <label>Nombre:<input type="text" required></label>
       <label>Email:<input type="email" required></label>
       <label>Mensaje:<textarea rows="4" required></textarea></label>
@@ -168,7 +168,7 @@
     function login() {
       const u = document.getElementById("user").value;
       const p = document.getElementById("pass").value;
-      if (u === "admin" && p === "admin123") {
+      if (u === "admin" && btoa(p) === "YWRtaW4xMjM=") {
         document.getElementById("adminPanel").classList.remove("hidden");
         alert("Bienvenido, administrador.");
       } else {
