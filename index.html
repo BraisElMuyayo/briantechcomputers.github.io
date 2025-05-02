@@ -2,65 +2,56 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Brian Technology Computers</title>
-  <style>
-    body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 0; }
-    header { background: #731010; color: white; padding: 1rem 2rem; display: flex; align-items: center; }
-    header img { height: 70px; margin-right: 1rem; }
-    h1 { margin: 0; font-size: 1.5rem; }
-    .btn { background: #731010; color: white; padding: 0.5rem 1rem; margin: 0.2rem; border: none; border-radius: 5px; cursor: pointer; }
-    .catalogo, .admin-panel { padding: 1rem; }
-    .servicio { background: white; margin: 1rem 0; padding: 1rem; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    input { width: 100%; padding: 0.5rem; margin: 0.3rem 0; }
-    iframe { width: 100%; height: 600px; border: none; margin-top: 1rem; }
-    #formulario { display: none; padding: 1rem; }
-  </style>
-</head>
-<body>
-  <header>
-    <img src="logo.png" alt="Logo" />
-    <h1>Brian Technology Computers</h1>
-  </header>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-  <section id="filtrosCategorias" class="catalogo"></section>
-  <section id="catalogo" class="catalogo"></section>
-
-  <section id="carrito" class="catalogo">
-    <h2>Carrito de servicios</h2>
-    <ul id="listaCarrito"></ul>
-    <button class="btn" onclick="vaciarCarrito()">Vaciar carrito</button>
-  </section>
-
-  <section id="formulario">
-    <h2>Formulario de contacto</h2>
-    <ul id="resumenServicios"></ul>
-    <button class="btn" onclick="copiarResumen()">Copiar servicios</button>
-    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfMwYVpVz07Fr4CKfXrp6AlZAjbOy6F_jpsINSuoAVolzA2rw/viewform?embedded=true">Cargando…</iframe>
-  </section>
-
-  <section class="admin-panel">
-    <h2>Acceso Administrador</h2>
-    <input id="adminUser" placeholder="Usuario" />
-    <input id="adminPass" placeholder="Contraseña" type="password" />
-    <button class="btn" onclick="loginAdmin()">Entrar</button>
-    <div id="adminPanel" style="display:none;">
-      <input id="nuevoCatalogo" placeholder="Nuevo catálogo" />
-      <button class="btn" onclick="crearCatalogo()">Crear catálogo</button>
-      <div id="panelCatalogos"></div>
-    </div>
-  </section>
-
-  <script>
-    let catalogos = {
-      "Ciberseguridad": [
-        { nombre: "Antivirus Pro", descripcion: "Instalación completa", precio: "30€" }
-      ],
-      "Reparación": [
-        { nombre: "Formateo completo", descripcion: "Optimización del sistema", precio: "25€" }
-      ]
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxQhjNfprSMsfvmvywL7MmdIDLgkZgw-o",
+      authDomain: "briantechcomputers-256c7.firebaseapp.com",
+      projectId: "briantechcomputers-256c7",
+      storageBucket: "briantechcomputers-256c7.firebasestorage.app",
+      messagingSenderId: "147606889127",
+      appId: "1:147606889127:web:3cee31b770f0dcf286b182"
     };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let catalogos = {};
+
+    async function cargarCatalogos() {
+      const docSnap = await getDoc(doc(db, "datos", "catalogos"));
+      if (docSnap.exists()) {
+        console.log("Datos cargados desde Firebase.");
+        catalogos = docSnap.data().catalogos;
+      } else {
+        catalogos = {
+          "Ciberseguridad": [
+            { "nombre": "Antivirus Pro", "descripcion": "Instalación completa", "precio": "30€" },
+            { "nombre": "Firewall Personalizado", "descripcion": "Configuración avanzada de reglas", "precio": "45€" }
+          ],
+          "Reparación": [
+            { "nombre": "Formateo completo", "descripcion": "Optimización del sistema", "precio": "25€" },
+            { "nombre": "Recuperación de datos", "descripcion": "Recuperación de discos dañados", "precio": "60€" }
+          ]
+        };
+        console.log("Inicializando Firebase con datos por defecto...");
+        await setDoc(doc(db, "datos", "catalogos"), { catalogos }); [{ nombre: "Antivirus Pro", descripcion: "Instalación completa", precio: "30€" }],
+          "Reparación": [{ nombre: "Formateo completo", descripcion: "Optimización del sistema", precio: "25€" }]
+        };
+      }
+      generarFiltros();
+      renderCatalogo();
+      renderAdminPanel();
+    }
+
+    async function guardarCatalogos() {
+      await setDoc(doc(db, "datos", "catalogos"), { catalogos });
+    }
 
     function generarFiltros() {
       const cont = document.getElementById("filtrosCategorias");
@@ -81,11 +72,11 @@
       for (let cat in data) {
         const div = document.createElement("div");
         div.innerHTML = `<h3>${cat}</h3>`;
-        data[cat].forEach((s, i) => {
+        data[cat].forEach((s) => {
           const card = document.createElement("div");
           card.className = "servicio";
           card.innerHTML = `<strong>${s.nombre}</strong><p>${s.descripcion}</p><p>Precio: ${s.precio}</p>
-          <button class='btn' onclick="agregarAlCarrito('${s.nombre}')">Agregar al carrito</button>`;
+            <button class='btn' onclick="agregarAlCarrito('${s.nombre}')">Agregar al carrito</button>`;
           div.appendChild(card);
         });
         cont.appendChild(div);
@@ -131,6 +122,7 @@
       const nombre = document.getElementById("nuevoCatalogo").value;
       if (nombre && !catalogos[nombre]) {
         catalogos[nombre] = [];
+        guardarCatalogos();
         generarFiltros();
         renderCatalogo();
         renderAdminPanel();
@@ -144,8 +136,7 @@
         const div = document.createElement("div");
         div.innerHTML = `<h4>${cat}</h4>
           <input id="n-${cat}" placeholder="Nombre"><input id="d-${cat}" placeholder="Descripción">
-          <input id="p-${cat}" placeholder="Precio">
-          <button class="btn" onclick="agregarServicio('${cat}')">Añadir servicio</button>`;
+          <input id="p-${cat}" placeholder="Precio"><button class="btn" onclick="agregarServicio('${cat}')">Añadir</button>`;
         catalogos[cat].forEach((s, i) => {
           div.innerHTML += `
             <div>
@@ -166,6 +157,7 @@
       const p = document.getElementById(`p-${cat}`).value + "€";
       if (n && d && p) {
         catalogos[cat].push({ nombre: n, descripcion: d, precio: p });
+        guardarCatalogos();
         renderCatalogo();
         renderAdminPanel();
       }
@@ -176,6 +168,7 @@
       const d = document.getElementById(`editd-${cat}-${i}`).value;
       const p = document.getElementById(`editp-${cat}-${i}`).value + "€";
       catalogos[cat][i] = { nombre: n, descripcion: d, precio: p };
+      guardarCatalogos();
       renderCatalogo();
       renderAdminPanel();
     }
@@ -183,13 +176,52 @@
     function eliminarServicio(cat, i) {
       if (confirm("¿Eliminar este servicio?")) {
         catalogos[cat].splice(i, 1);
+        guardarCatalogos();
         renderCatalogo();
         renderAdminPanel();
       }
     }
 
-    generarFiltros();
-    renderCatalogo();
+    window.onload = () => {
+      cargarCatalogos();
+    };
   </script>
+  <style>
+    body { font-family: Arial; margin: 0; padding: 1rem; background: #f4f4f4; }
+    h1 { background: #731010; color: white; padding: 1rem; }
+    .btn { background: #731010; color: white; border: none; padding: 0.5rem 1rem; margin: 0.2rem; border-radius: 5px; cursor: pointer; }
+    .servicio { background: white; margin: 1rem 0; padding: 1rem; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    input { margin: 0.3rem 0; padding: 0.3rem; width: 100%; }
+    iframe { width: 100%; height: 600px; border: none; margin-top: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>Brian Technology Computers</h1>
+  <section id="filtrosCategorias"></section>
+  <section id="catalogo"></section>
+
+  <section id="carrito">
+    <h2>Carrito</h2>
+    <ul id="listaCarrito"></ul>
+    <button class="btn" onclick="vaciarCarrito()">Vaciar carrito</button>
+  </section>
+
+  <section id="formulario" style="display:none;">
+    <h2>Formulario de contacto</h2>
+    <ul id="resumenServicios"></ul>
+    <button class="btn" onclick="copiarResumen()">Copiar servicios</button>
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfMwYVpVz07Fr4CKfXrp6AlZAjbOy6F_jpsINSuoAVolzA2rw/viewform?embedded=true"></iframe>
+  </section>
+
+  <hr />
+  <h2>Admin</h2>
+  <input id="adminUser" placeholder="Usuario" />
+  <input id="adminPass" type="password" placeholder="Contraseña" />
+  <button class="btn" onclick="loginAdmin()">Entrar</button>
+  <div id="adminPanel" style="display:none;">
+    <input id="nuevoCatalogo" placeholder="Nuevo catálogo" />
+    <button class="btn" onclick="crearCatalogo()">Crear catálogo</button>
+    <div id="panelCatalogos"></div>
+  </div>
 </body>
 </html>
