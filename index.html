@@ -39,7 +39,10 @@
     <a href="#admin">Admin</a>
   </nav>
 
-  <section id="catalogo"></section>
+  
+<section id="catalogo">
+  <div id="filtrosCategorias" style="margin-bottom: 1rem;"></div>
+</section>
 
   <section id="carrito">
     <h2>Carrito</h2>
@@ -79,7 +82,26 @@
       ]
     };
 
-    function renderCatalogo() {
+    
+function generarFiltros() {
+  const contenedor = document.getElementById("filtrosCategorias");
+  contenedor.innerHTML = "";
+  const btnTodos = document.createElement("button");
+  btnTodos.className = "btn";
+  btnTodos.innerText = "Ver todos";
+  btnTodos.onclick = () => renderCatalogo();
+  contenedor.appendChild(btnTodos);
+
+  for (let cat in catalogos) {
+    const btn = document.createElement("button");
+    btn.className = "btn";
+    btn.innerText = cat;
+    btn.onclick = () => renderCatalogo(cat);
+    contenedor.appendChild(btn);
+  }
+}
+
+function renderCatalogo() {
       const seccion = document.getElementById("catalogo");
       seccion.innerHTML = "<h2>Catálogo de servicios</h2>";
       for (let cat in catalogos) {
@@ -124,14 +146,16 @@ function guardarEdicionServicio(cat, idx) {
   const descripcion = document.getElementById(`edit-desc-${cat}-${idx}`).value;
   const precio = document.getElementById(`edit-precio-${cat}-${idx}`).value + "€";
   catalogos[cat][idx] = { nombre, descripcion, precio };
-  renderCatalogo();
+  generarFiltros();
+renderCatalogo();
   renderAdminEditor();
 }
 
 function borrarServicio(cat, idx) {
   if (confirm("¿Eliminar este servicio?")) {
     catalogos[cat].splice(idx, 1);
-    renderCatalogo();
+    generarFiltros();
+renderCatalogo();
     renderAdminEditor();
   }
 }
@@ -145,7 +169,8 @@ function borrarServicio(cat, idx) {
       const nuevo = document.getElementById("nuevoCatalogo").value;
       if (!nuevo || catalogos[nuevo]) return alert("Nombre inválido o ya existe.");
       catalogos[nuevo] = [];
-      renderCatalogo();
+      generarFiltros();
+renderCatalogo();
       renderAdminEditor();
 
 function guardarEdicionServicio(cat, idx) {
@@ -153,14 +178,16 @@ function guardarEdicionServicio(cat, idx) {
   const descripcion = document.getElementById(`edit-desc-${cat}-${idx}`).value;
   const precio = document.getElementById(`edit-precio-${cat}-${idx}`).value + "€";
   catalogos[cat][idx] = { nombre, descripcion, precio };
-  renderCatalogo();
+  generarFiltros();
+renderCatalogo();
   renderAdminEditor();
 }
 
 function borrarServicio(cat, idx) {
   if (confirm("¿Eliminar este servicio?")) {
     catalogos[cat].splice(idx, 1);
-    renderCatalogo();
+    generarFiltros();
+renderCatalogo();
     renderAdminEditor();
   }
 }
@@ -201,7 +228,8 @@ function borrarServicio(cat, idx) {
       const descripcion = document.getElementById("desc-" + cat).value;
       const precio = document.getElementById("precio-" + cat).value + "€";
       catalogos[cat].push({ nombre, descripcion, precio }); renderServicios();
-      renderCatalogo();
+      generarFiltros();
+renderCatalogo();
       renderAdminEditor();
 
 function guardarEdicionServicio(cat, idx) {
@@ -209,14 +237,16 @@ function guardarEdicionServicio(cat, idx) {
   const descripcion = document.getElementById(`edit-desc-${cat}-${idx}`).value;
   const precio = document.getElementById(`edit-precio-${cat}-${idx}`).value + "€";
   catalogos[cat][idx] = { nombre, descripcion, precio };
-  renderCatalogo();
+  generarFiltros();
+renderCatalogo();
   renderAdminEditor();
 }
 
 function borrarServicio(cat, idx) {
   if (confirm("¿Eliminar este servicio?")) {
     catalogos[cat].splice(idx, 1);
-    renderCatalogo();
+    generarFiltros();
+renderCatalogo();
     renderAdminEditor();
   }
 }
@@ -228,7 +258,8 @@ function borrarServicio(cat, idx) {
       if (nuevoNombre && !catalogos[nuevoNombre]) {
         catalogos[nuevoNombre] = catalogos[cat];
         delete catalogos[cat];
-        renderCatalogo();
+        generarFiltros();
+renderCatalogo();
         renderAdminEditor();
 
 function guardarEdicionServicio(cat, idx) {
@@ -236,14 +267,16 @@ function guardarEdicionServicio(cat, idx) {
   const descripcion = document.getElementById(`edit-desc-${cat}-${idx}`).value;
   const precio = document.getElementById(`edit-precio-${cat}-${idx}`).value + "€";
   catalogos[cat][idx] = { nombre, descripcion, precio };
-  renderCatalogo();
+  generarFiltros();
+renderCatalogo();
   renderAdminEditor();
 }
 
 function borrarServicio(cat, idx) {
   if (confirm("¿Eliminar este servicio?")) {
     catalogos[cat].splice(idx, 1);
-    renderCatalogo();
+    generarFiltros();
+renderCatalogo();
     renderAdminEditor();
   }
 }
@@ -254,7 +287,8 @@ function borrarServicio(cat, idx) {
     function eliminarCatalogo(cat) {
       if (confirm("¿Eliminar este catálogo?")) {
         delete catalogos[cat];
-        renderCatalogo();
+        generarFiltros();
+renderCatalogo();
         renderAdminEditor();
 
 function guardarEdicionServicio(cat, idx) {
@@ -262,14 +296,16 @@ function guardarEdicionServicio(cat, idx) {
   const descripcion = document.getElementById(`edit-desc-${cat}-${idx}`).value;
   const precio = document.getElementById(`edit-precio-${cat}-${idx}`).value + "€";
   catalogos[cat][idx] = { nombre, descripcion, precio };
-  renderCatalogo();
+  generarFiltros();
+renderCatalogo();
   renderAdminEditor();
 }
 
 function borrarServicio(cat, idx) {
   if (confirm("¿Eliminar este servicio?")) {
     catalogos[cat].splice(idx, 1);
-    renderCatalogo();
+    generarFiltros();
+renderCatalogo();
     renderAdminEditor();
   }
 }
@@ -277,7 +313,8 @@ function borrarServicio(cat, idx) {
       }
     }
 
-    renderCatalogo();
+    generarFiltros();
+renderCatalogo();
   </script>
 </body>
 </html>
