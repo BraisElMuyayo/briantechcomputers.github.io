@@ -30,7 +30,7 @@
   </section>
 
   <section id="carrito">
-    <h2>Carrito de servicios</h2>
+    <h2>Carrito de servicios</h2><button class="btn" onclick="vaciarCarrito()">Vaciar carrito</button>
     <ul id="listaCarrito"></ul>
   </section>
 
@@ -113,7 +113,15 @@
     
     }
 
+    
+    function vaciarCarrito() {
+      document.getElementById("listaCarrito").innerHTML = "";
+      document.getElementById("resumenServicios").innerHTML = "";
+      document.getElementById("formulario").style.display = "none";
+    }
+
     function copiarResumen() {
+    
       const items = Array.from(document.querySelectorAll("#resumenServicios li")).map(li => li.textContent).join("\n");
       navigator.clipboard.writeText(items);
       alert("Servicios copiados");
