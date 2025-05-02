@@ -7,18 +7,80 @@
   <title>Brian Technology Computers</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Roboto', sans-serif; background-color: #f8f8f8; margin: 0; }
-    header { background: #731010; color: white; display: flex; align-items: center; padding: 1rem 2rem; }
-    header img { height: 100px; margin-right: 1rem; }
-    nav { background: #fff; text-align: center; padding: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    nav a { margin: 0 15px; color: #731010; text-decoration: none; font-weight: bold; }
-    section { padding: 2rem; }
-    .catalogo { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
-    .servicio { background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-    .servicio h3 { margin-top: 0; color: #731010; }
-    .precio { font-weight: bold; color: #444; }
-    .btn { margin-top: 0.5rem; padding: 0.5rem 1rem; background: #731010; color: white; border: none; border-radius: 5px; cursor: pointer; }
-    input, textarea { width: 100%; padding: 0.5rem; margin: 0.5rem 0; border: 1px solid #ccc; border-radius: 5px; }
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background-color: #f8f8f8;
+      color: #333;
+    }
+    header {
+      background-color: #731010;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+    }
+    header img {
+      height: 100px;
+      margin-right: 1rem;
+    }
+    nav {
+      background-color: #fff;
+      text-align: center;
+      padding: 1rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: #731010;
+      font-weight: bold;
+    }
+    .catalogo {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem;
+    }
+    .servicio {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    .servicio h3 {
+      margin-top: 0;
+      color: #731010;
+    }
+    .precio {
+      font-weight: bold;
+      color: #444;
+    }
+    .btn {
+      margin-top: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: #731010;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #500c0c;
+    }
+    section {
+      padding: 2rem;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -33,7 +95,7 @@
   <nav>
     <a href="#catalogo">Catálogo</a>
     <a href="#carrito">Carrito</a>
-    <a href="#contacto">Contacto</a>
+    <a href="#admin">Admin</a>
   </nav>
 
   <section id="catalogo" class="catalogo"></section>
@@ -43,16 +105,34 @@
     <ul id="listaCarrito"></ul>
   </section>
 
-  <section id="contacto">
+  <section id="formulario">
+
+<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfMwYVpVz07Fr4CKfXrp6AlZAjbOy6F_jpsINSuoAVolzA2rw/viewform?embedded=true" width="100%" height="900" frameborder="0" marginheight="0" marginwidth="0">Cargando…</iframe>
+
     <h2>Formulario de contacto</h2>
-    <form action="https://formsubmit.co/briantechcomputers@gmail.com" method="POST" onsubmit="return copiarCarrito()">
-      <label>Nombre:<input type="text" name="name" required></label>
-      <label>Email:<input type="email" name="email" required></label>
-      <label>Mensaje adicional:<textarea name="message" required></textarea></label>
-      <input type="hidden" name="services" id="serviciosSeleccionados">
-      <input type="hidden" name="_next" value="https://briantechcomputers.github.io/gracias.html">
+    <!-- FORMULARIO ORIGINAL ELIMINADO -->
+      <label>Nombre:<input type="text" id="nombre" required></label>
+      <label>Email:<input type="email" id="email" required></label>
+      <label>Mensaje adicional:<textarea id="mensaje"></textarea></label>
       <button class="btn" type="submit">Enviar</button>
+      <p id="respuesta"></p>
     </form>
+  </section>
+
+  <section id="admin">
+    <h2>Panel de administrador</h2>
+    <label>Usuario:<input type="text" id="adminUser"></label>
+    <label>Contraseña:<input type="password" id="adminPass"></label>
+    <button class="btn" onclick="loginAdmin()">Entrar</button>
+
+    <div id="adminPanel" class="hidden">
+      <h3>Agregar nuevo servicio</h3>
+      <input type="text" id="nuevoNombre" placeholder="Nombre">
+      <input type="text" id="nuevaDesc" placeholder="Descripción">
+      <input type="text" id="nuevoPrecio" placeholder="Precio (€)">
+      <button class="btn" onclick="agregarServicio()">Agregar</button>
+      <ul id="listaAdmin"></ul>
+    </div>
   </section>
 
   <script>
@@ -65,12 +145,13 @@
     function renderServicios() {
       const contenedor = document.getElementById("catalogo");
       contenedor.innerHTML = "";
-      servicios.forEach((s) => {
+      servicios.forEach((s, i) => {
         const div = document.createElement("div");
         div.className = "servicio";
         div.innerHTML = `<h3>${s.nombre}</h3><p>${s.descripcion}</p><p class="precio">Precio: ${s.precio}</p><button class="btn" onclick="agregarAlCarrito('${s.nombre}')">Agregar al carrito</button>`;
         contenedor.appendChild(div);
       });
+      renderAdminList();
     }
 
     function agregarAlCarrito(nombre) {
@@ -79,11 +160,58 @@
       document.getElementById("listaCarrito").appendChild(li);
     }
 
-    function copiarCarrito() {
-      const carritoItems = Array.from(document.getElementById("listaCarrito").children).map(li => li.textContent);
-      document.getElementById("serviciosSeleccionados").value = carritoItems.join(", ");
-      return true;
+    function loginAdmin() {
+      const u = document.getElementById("adminUser").value;
+      const p = document.getElementById("adminPass").value;
+      if (u === "admin" && btoa(p) === "YWRtaW4xMjM=") {
+        document.getElementById("adminPanel").classList.remove("hidden");
+        renderAdminList();
+      } else {
+        alert("Credenciales incorrectas");
+      }
     }
+
+    function agregarServicio() {
+      const nombre = document.getElementById("nuevoNombre").value;
+      const descripcion = document.getElementById("nuevaDesc").value;
+      const precio = document.getElementById("nuevoPrecio").value + "€";
+      servicios.push({ nombre, descripcion, precio });
+      renderServicios();
+    }
+
+    function renderAdminList() {
+      const lista = document.getElementById("listaAdmin");
+      if (!lista) return;
+      lista.innerHTML = "";
+      servicios.forEach((s, i) => {
+        const item = document.createElement("li");
+        item.innerHTML = `${s.nombre} - <button onclick="eliminarServicio(${i})">Eliminar</button>`;
+        lista.appendChild(item);
+      });
+    }
+
+    function eliminarServicio(index) {
+      if (confirm("¿Eliminar este servicio?")) {
+        servicios.splice(index, 1);
+        renderServicios();
+      }
+    }
+
+    document.getElementById("contact-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const nombre = document.getElementById("nombre").value;
+      const email = document.getElementById("email").value;
+      const mensaje = document.getElementById("mensaje").value;
+      const carritoItems = Array.from(document.getElementById("listaCarrito").children).map(li => li.textContent);
+      const servicios = carritoItems.join(", ");
+      fetch("https://formspree.io/f/xldbjjrq", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nombre, email, mensaje, servicios })
+      }).then(r => {
+        document.getElementById("respuesta").textContent = r.ok ? "Enviado correctamente." : "Error al enviar.";
+      });
+    });
 
     renderServicios();
   </script>
