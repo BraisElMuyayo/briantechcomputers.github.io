@@ -217,16 +217,27 @@ document.getElementById("contact-form").addEventListener("submit", function(e) {
   e.preventDefault();
   const name = document.getElementById("nombre").value;
   const email = document.getElementById("email").value;
-  const message = document.getElementById("mensaje").value;
+  const mensajeLibre = document.getElementById("mensaje").value;
   const carritoItems = Array.from(document.getElementById("listaCarrito").children).map(li => li.textContent);
-  const services = carritoItems.join(", ");
+  const servicesList = carritoItems.length ? "\n\nServicios seleccionados:\n- " + carritoItems.join("\n- ") : "";
+  const message = mensajeLibre + servicesList;
+
   fetch("https://formspree.io/f/xldbjjrq", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, email, message, services })
+    body: JSON.stringify({ name, email, message })
   }).then(r => {
-    document.getElementById("respuesta").style.color = r.ok ? "green" : "red";
-    document.getElementById("respuesta").textContent = r.ok ? "Mensaje enviado correctamente." : "Error al enviar. Verifica los datos.";
+    const respuesta = document.getElementById("respuesta");
+    if (r.ok) {
+      respuesta.style.color = "green";
+      respuesta.textContent = "Mensaje enviado correctamente.";
+    } else {
+      respuesta.style.color = "red";
+      respuesta.textContent = "Error al enviar. Verifica tu correo.";
+    }
+  }).catch(() => {
+    document.getElementById("respuesta").style.color = "red";
+    document.getElementById("respuesta").textContent = "Error de conexión.";
   });
 });
 </script>
