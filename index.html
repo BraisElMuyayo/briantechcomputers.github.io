@@ -69,34 +69,34 @@
   </section>
 
   <script>
-    let catalogos = {{
+    let catalogos = {
       "Ciberseguridad": [
-        {{ nombre: "Instalación Antivirus", descripcion: "Instalamos y configuramos antivirus", precio: "30€" }},
-        {{ nombre: "Firewall Personalizado", descripcion: "Configuramos cortafuegos", precio: "50€" }}
+        { nombre: "Instalación Antivirus", descripcion: "Instalamos y configuramos antivirus", precio: "30€" },
+        { nombre: "Firewall Personalizado", descripcion: "Configuramos cortafuegos", precio: "50€" }
       ],
       "Reparación": [
-        {{ nombre: "Formateo", descripcion: "Formateo completo del equipo", precio: "25€" }}
+        { nombre: "Formateo", descripcion: "Formateo completo del equipo", precio: "25€" }
       ]
-    }};
+    };
 
-    function renderCatalogo() {{
+    function renderCatalogo() {
       const seccion = document.getElementById("catalogo");
       seccion.innerHTML = "<h2>Catálogo de servicios</h2>";
-      for (let cat in catalogos) {{
+      for (let cat in catalogos) {
         const div = document.createElement("div");
         div.className = "catalogo";
-        div.innerHTML = `<h3>${{cat}}</h3>`;
-        catalogos[cat].forEach((s, i) => {{
+        div.innerHTML = `<h3>${cat}</h3>`;
+        catalogos[cat].forEach((s, i) => {
           const servicio = document.createElement("div");
           servicio.className = "servicio";
-          servicio.innerHTML = `<strong>${{s.nombre}}</strong><p>${{s.descripcion}}</p><p class="precio">Precio: ${{s.precio}}</p><button class="btn" onclick="agregarAlCarrito('${{s.nombre}}')">Agregar al carrito</button>`;
+          servicio.innerHTML = `<strong>${s.nombre}</strong><p>${s.descripcion}</p><p class="precio">Precio: ${s.precio}</p><button class="btn" onclick="agregarAlCarrito('${s.nombre}')">Agregar al carrito</button>`;
           div.appendChild(servicio);
-        }});
+        });
         seccion.appendChild(div);
-      }}
-    }}
+      }
+    }
 
-    function agregarAlCarrito(nombre) {{
+    function agregarAlCarrito(nombre) {
       const li = document.createElement("li");
       li.textContent = nombre;
       document.getElementById("listaCarrito").appendChild(li);
@@ -104,75 +104,75 @@
       resumen.textContent = nombre;
       document.getElementById("resumenServicios").appendChild(resumen);
       document.getElementById("formFrame").style.display = "block";
-    }}
+    }
 
-    function copiarResumen() {{
+    function copiarResumen() {
       const items = Array.from(document.getElementById("resumenServicios").children).map(li => li.textContent).join("\n");
       navigator.clipboard.writeText(items);
       alert("Servicios copiados al portapapeles.");
-    }}
+    }
 
-    function loginAdmin() {{
+    function loginAdmin() {
       const u = document.getElementById("adminUser").value;
       const p = document.getElementById("adminPass").value;
-      if (u === "admin" && btoa(p) === "YWRtaW4xMjM=") {{
+      if (u === "admin" && btoa(p) === "YWRtaW4xMjM=") {
         document.getElementById("adminPanel").classList.remove("hidden");
         renderAdminEditor();
-      }} else {{
+      } else {
         alert("Credenciales incorrectas.");
-      }}
-    }}
+      }
+    }
 
-    function crearCatalogo() {{
+    function crearCatalogo() {
       const nuevo = document.getElementById("nuevoCatalogo").value;
       if (!nuevo || catalogos[nuevo]) return alert("Nombre inválido o ya existe.");
       catalogos[nuevo] = [];
       renderCatalogo();
       renderAdminEditor();
-    }}
+    }
 
-    function renderAdminEditor() {{
+    function renderAdminEditor() {
       const div = document.getElementById("catalogoEditor");
       div.innerHTML = "";
-      for (let cat in catalogos) {{
+      for (let cat in catalogos) {
         const section = document.createElement("div");
-        section.innerHTML = `<h4>${{cat}} <button onclick="renombrarCatalogo('${{cat}}')">Renombrar</button> <button onclick="eliminarCatalogo('${{cat}}')">Eliminar</button></h4>`;
+        section.innerHTML = `<h4>${cat} <button onclick="renombrarCatalogo('${cat}')">Renombrar</button> <button onclick="eliminarCatalogo('${cat}')">Eliminar</button></h4>`;
         section.innerHTML += `
-          <input placeholder='Nombre' id='nombre-${{cat}}'>
-          <input placeholder='Descripción' id='desc-${{cat}}'>
-          <input placeholder='Precio' id='precio-${{cat}}'>
-          <button class='btn' onclick="agregarServicioCatalogo('${{cat}}')">Agregar</button>
+          <input placeholder='Nombre' id='nombre-${cat}'>
+          <input placeholder='Descripción' id='desc-${cat}'>
+          <input placeholder='Precio' id='precio-${cat}'>
+          <button class='btn' onclick="agregarServicioCatalogo('${cat}')">Agregar</button>
         `;
         div.appendChild(section);
-      }}
-    }}
+      }
+    }
 
-    function agregarServicioCatalogo(cat) {{
+    function agregarServicioCatalogo(cat) {
       const nombre = document.getElementById("nombre-" + cat).value;
       const descripcion = document.getElementById("desc-" + cat).value;
       const precio = document.getElementById("precio-" + cat).value + "€";
-      catalogos[cat].push({{ nombre, descripcion, precio }});
+      catalogos[cat].push({ nombre, descripcion, precio });
       renderCatalogo();
       renderAdminEditor();
-    }}
+    }
 
-    function renombrarCatalogo(cat) {{
+    function renombrarCatalogo(cat) {
       const nuevoNombre = prompt("Nuevo nombre para el catálogo:", cat);
-      if (nuevoNombre && !catalogos[nuevoNombre]) {{
+      if (nuevoNombre && !catalogos[nuevoNombre]) {
         catalogos[nuevoNombre] = catalogos[cat];
         delete catalogos[cat];
         renderCatalogo();
         renderAdminEditor();
-      }}
-    }}
+      }
+    }
 
-    function eliminarCatalogo(cat) {{
-      if (confirm("¿Eliminar este catálogo?")) {{
+    function eliminarCatalogo(cat) {
+      if (confirm("¿Eliminar este catálogo?")) {
         delete catalogos[cat];
         renderCatalogo();
         renderAdminEditor();
-      }}
-    }}
+      }
+    }
 
     renderCatalogo();
   </script>
