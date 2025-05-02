@@ -2,54 +2,51 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Brian Technology Computers</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
       font-family: 'Roboto', sans-serif;
-      background-color: #f9f9f9;
+      background-color: #f8f8f8;
       color: #333;
     }
     header {
       background-color: #731010;
       color: white;
+      padding: 1rem 2rem;
       display: flex;
       align-items: center;
-      padding: 1rem 2rem;
     }
     header img {
-      height: 90px;
-      margin-right: 1.5rem;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 2rem;
+      height: 100px;
+      margin-right: 1rem;
     }
     nav {
-      background: #fff;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      background-color: #fff;
+      text-align: center;
+      padding: 1rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     nav a {
-      margin: 0 1rem;
+      margin: 0 15px;
       text-decoration: none;
       color: #731010;
       font-weight: bold;
     }
     .catalogo {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1.5rem;
       padding: 2rem;
     }
     .servicio {
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      background: white;
       padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
     .servicio h3 {
       margin-top: 0;
@@ -57,37 +54,32 @@
     }
     .precio {
       font-weight: bold;
-      color: #555;
-      margin: 0.5rem 0;
+      color: #444;
     }
     .btn {
-      background-color: #731010;
+      margin-top: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: #731010;
       color: white;
-      padding: 0.6rem 1rem;
       border: none;
       border-radius: 5px;
       cursor: pointer;
     }
     .btn:hover {
-      background-color: #500a0a;
+      background: #500c0c;
+    }
+    section {
+      padding: 2rem;
     }
     input, textarea {
       width: 100%;
       padding: 0.5rem;
-      margin-top: 0.3rem;
-      margin-bottom: 1rem;
+      margin: 0.5rem 0;
       border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    .admin-panel {
-      padding: 2rem;
-      background: #fff4f4;
+      border-radius: 5px;
     }
     .hidden {
       display: none;
-    }
-    h2 {
-      color: #731010;
     }
   </style>
 </head>
@@ -103,118 +95,66 @@
   <nav>
     <a href="#catalogo">Catálogo</a>
     <a href="#carrito">Carrito</a>
-    <a href="#login">Login</a>
+    <a href="#admin">Admin</a>
   </nav>
 
   <section id="catalogo" class="catalogo"></section>
 
-  <section id="carrito" style="padding:2rem;">
+  <section id="carrito">
     <h2>Carrito de servicios</h2>
     <ul id="listaCarrito"></ul>
   </section>
 
-  <section id="login" style="padding:2rem;">
-    <h2>Iniciar Sesión (Administrador)</h2>
-    <input type="text" id="adminUser" placeholder="Usuario">
-    <input type="password" id="adminPass" placeholder="Contraseña">
+  <section id="formulario">
+    <h2>Formulario de contacto</h2>
+    <form id="contact-form">
+      <label>Nombre:<input type="text" id="nombre" required></label>
+      <label>Email:<input type="email" id="email" required></label>
+      <label>Mensaje adicional:<textarea id="mensaje"></textarea></label>
+      <button class="btn" type="submit">Enviar</button>
+      <p id="respuesta"></p>
+    </form>
+  </section>
+
+  <section id="admin">
+    <h2>Panel de administrador</h2>
+    <label>Usuario:<input type="text" id="adminUser"></label>
+    <label>Contraseña:<input type="password" id="adminPass"></label>
     <button class="btn" onclick="loginAdmin()">Entrar</button>
-  </section>
 
-  <section id="adminPanel" class="admin-panel hidden">
-    <h2>Panel de Administración</h2>
-    <label>Nombre del servicio:<input id="nuevoNombre"></label>
-    <label>Descripción:<input id="nuevaDesc"></label>
-    <label>Precio:<input id="nuevoPrecio" type="number"></label>
-    <button class="btn" onclick="agregarServicio()">Agregar servicio</button>
-  
-  </section>
-
-  <section id="adminManagePanel" class="admin-panel hidden">
-    <h2>Gestionar Servicios Existentes</h2>
-    <ul id="listaServiciosAdmin"></ul>
+    <div id="adminPanel" class="hidden">
+      <h3>Agregar nuevo servicio</h3>
+      <input type="text" id="nuevoNombre" placeholder="Nombre">
+      <input type="text" id="nuevaDesc" placeholder="Descripción">
+      <input type="text" id="nuevoPrecio" placeholder="Precio (€)">
+      <button class="btn" onclick="agregarServicio()">Agregar</button>
+      <ul id="listaAdmin"></ul>
+    </div>
   </section>
 
   <script>
-    function renderAdminList() {
-      const lista = document.getElementById("listaServiciosAdmin");
-      if (!lista) return;
-      lista.innerHTML = "";
-      servicios.forEach((serv, index) => {
-        const item = document.createElement("li");
-        item.innerHTML = `
-          <strong>${serv.nombre}</strong> - ${serv.descripcion} - <em>${serv.precio}</em>
-          <button onclick="editarServicio(${index})">Editar</button>
-          <button onclick="eliminarServicio(${index})">Eliminar</button>
-        `;
-        lista.appendChild(item);
-      });
-    }
-
-    function editarServicio(i) {
-      const serv = servicios[i];
-      const nuevoNombre = prompt("Nuevo nombre:", serv.nombre);
-      const nuevaDesc = prompt("Nueva descripción:", serv.descripcion);
-      const nuevoPrecio = prompt("Nuevo precio:", serv.precio.replace('€',''));
-      if (nuevoNombre && nuevaDesc && nuevoPrecio) {
-        servicios[i] = {
-          nombre: nuevoNombre,
-          descripcion: nuevaDesc,
-          precio: nuevoPrecio + "€"
-        };
-        renderCatalogo();
-        renderAdminList();
-      }
-    }
-
-    function eliminarServicio(i) {
-      if (confirm("¿Estás seguro de eliminar este servicio?")) {
-        servicios.splice(i, 1);
-        renderCatalogo();
-        renderAdminList();
-      }
-    }
-
-    // Mostrar panel extendido solo si el admin accede
-    const originalLogin = loginAdmin.toString();
-    loginAdmin = function() {
-      const u = document.getElementById("adminUser").value;
-      const p = document.getElementById("adminPass").value;
-      if (u === "admin" && btoa(p) === "YWRtaW4xMjM=") {
-        document.getElementById("adminPanel").classList.remove("hidden");
-        document.getElementById("adminManagePanel").classList.remove("hidden");
-        renderAdminList();
-        alert("Bienvenido administrador.");
-      } else {
-        alert("Acceso denegado.");
-      }
-    };
-
     let servicios = [
-      {{ nombre: "Instalación de Sistemas Operativos", descripcion: "Formateo e instalación completa.", precio: "30€" }},
-      {{ nombre: "Seguridad Informática", descripcion: "Antivirus, firewall y configuración segura.", precio: "40€" }},
-      {{ nombre: "Mantenimiento Preventivo", descripcion: "Limpieza, optimización y actualizaciones.", precio: "25€" }}
+      { nombre: "Instalación de SO", descripcion: "Formateo e instalación completa", precio: "30€" },
+      { nombre: "Antivirus y Seguridad", descripcion: "Protección contra malware", precio: "40€" },
+      { nombre: "Mantenimiento", descripcion: "Limpieza interna y optimización", precio: "25€" }
     ];
 
-    const catalogo = document.getElementById("catalogo");
-    const carrito = document.getElementById("listaCarrito");
-
-    function renderCatalogo() {
-      catalogo.innerHTML = "";
-      servicios.forEach(serv => {
+    function renderServicios() {
+      const contenedor = document.getElementById("catalogo");
+      contenedor.innerHTML = "";
+      servicios.forEach((s, i) => {
         const div = document.createElement("div");
         div.className = "servicio";
-        div.innerHTML = `<h3>${serv.nombre}</h3>
-                         <p>${serv.descripcion}</p>
-                         <p class="precio">Precio: ${serv.precio}</p>
-                         <button class="btn" onclick="agregarAlCarrito('${serv.nombre}')">Agregar al carrito</button>`;
-        catalogo.appendChild(div);
+        div.innerHTML = `<h3>${s.nombre}</h3><p>${s.descripcion}</p><p class="precio">Precio: ${s.precio}</p><button class="btn" onclick="agregarAlCarrito('${s.nombre}')">Agregar al carrito</button>`;
+        contenedor.appendChild(div);
       });
+      renderAdminList();
     }
 
     function agregarAlCarrito(nombre) {
       const li = document.createElement("li");
       li.textContent = nombre;
-      carrito.appendChild(li);
+      document.getElementById("listaCarrito").appendChild(li);
     }
 
     function loginAdmin() {
@@ -222,9 +162,9 @@
       const p = document.getElementById("adminPass").value;
       if (u === "admin" && btoa(p) === "YWRtaW4xMjM=") {
         document.getElementById("adminPanel").classList.remove("hidden");
-        alert("Bienvenido administrador.");
+        renderAdminList();
       } else {
-        alert("Acceso denegado.");
+        alert("Credenciales incorrectas");
       }
     }
 
@@ -233,39 +173,44 @@
       const descripcion = document.getElementById("nuevaDesc").value;
       const precio = document.getElementById("nuevoPrecio").value + "€";
       servicios.push({ nombre, descripcion, precio });
-      renderCatalogo();
-      alert("Servicio añadido.");
+      renderServicios();
     }
 
-    renderCatalogo();
+    function renderAdminList() {
+      const lista = document.getElementById("listaAdmin");
+      if (!lista) return;
+      lista.innerHTML = "";
+      servicios.forEach((s, i) => {
+        const item = document.createElement("li");
+        item.innerHTML = `${s.nombre} - <button onclick="eliminarServicio(${i})">Eliminar</button>`;
+        lista.appendChild(item);
+      });
+    }
+
+    function eliminarServicio(index) {
+      if (confirm("¿Eliminar este servicio?")) {
+        servicios.splice(index, 1);
+        renderServicios();
+      }
+    }
+
+    document.getElementById("contact-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const nombre = document.getElementById("nombre").value;
+      const email = document.getElementById("email").value;
+      const mensaje = document.getElementById("mensaje").value;
+      const carritoItems = Array.from(document.getElementById("listaCarrito").children).map(li => li.textContent);
+      const servicios = carritoItems.join(", ");
+      fetch("https://formspree.io/f/xldbjjrq", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nombre, email, mensaje, servicios })
+      }).then(r => {
+        document.getElementById("respuesta").textContent = r.ok ? "Enviado correctamente." : "Error al enviar.";
+      });
+    });
+
+    renderServicios();
   </script>
-<script>
-document.getElementById("contact-form").addEventListener("submit", function(e) {
-  e.preventDefault();
-  const nombre = document.getElementById("nombre").value;
-  const email = document.getElementById("email").value;
-  const mensaje = document.getElementById("mensaje").value;
-  const respuesta = document.getElementById("respuesta");
-  const carritoItems = Array.from(document.getElementById("listaCarrito").children).map(li => li.textContent);
-  const servicios = carritoItems.join(", ");
-
-  fetch("https://formspree.io/f/xldbjjrq", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ nombre, email, mensaje, servicios })
-  }).then(response => {
-    if (response.ok) {
-      respuesta.style.color = "green";
-      respuesta.textContent = "Mensaje enviado correctamente.";
-    } else {
-      respuesta.style.color = "red";
-      respuesta.textContent = "Error al enviar. Intenta de nuevo.";
-    }
-  }).catch(() => {
-    respuesta.style.color = "red";
-    respuesta.textContent = "Error de conexión.";
-  });
-});
-</script>
 </body>
 </html>
