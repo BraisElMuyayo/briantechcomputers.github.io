@@ -104,7 +104,13 @@
       const resumen = document.createElement("li");
       resumen.textContent = nombre;
       document.getElementById("resumenServicios").appendChild(resumen);
-      document.getElementById("formulario").style.display = "block";
+      
+    document.getElementById("formulario").style.display = "block";
+    const resumen = document.getElementById("resumenServicios");
+    const item = document.createElement("li");
+    item.textContent = nombre;
+    resumen.appendChild(item);
+    
     }
 
     function copiarResumen() {
